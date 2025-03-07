@@ -834,15 +834,15 @@ document.querySelector('.main-page-ctn').innerHTML = generateTable(data, keys);
          let jp = total * item.xx
          let comcompute = tableTotal * item.comm/100
          let winlose = tableTotal - (comcompute + jp)
-         document.querySelector('.income-text').innerHTML = `ကောက်ကြေး = ${tableTotal}`
-         document.querySelector('.comm-text').innerHTML = `ကော်မရှင် = ${comcompute} `
-            document.querySelector('.compute-text').innerHTML = `လျော် = (${key}) = ${total} x ${item.xx}ဆ = -${jp} `
+         document.querySelector('.income-text').innerHTML = `ကောက်ကြေး = ${tableTotal}.`
+         document.querySelector('.comm-text').innerHTML = `ကော်မရှင် = ${comcompute}. `
+            document.querySelector('.compute-text').innerHTML = `လျော် = (${key}) = ${total} x ${item.xx}ဆ = -${jp}. `
               if(winlose<0){
-                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (စိုက်)`
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose}. (စိုက်)`
                 document.querySelector('.winlose-text').style.color = 'red'
               }
               if(winlose >= 0){
-                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (မြတ်)`
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose}. (မြတ်)`
                 document.querySelector('.winlose-text').style.color = 'blue'
               }
               
@@ -989,7 +989,7 @@ container.appendChild(tableDiv)
          computeDiv.innerHTML = `<h4>${dateAmpm.Date} - ${dateAmpm.Ampm}</h4>
                                 <p>ကောက်ကြေး = ${saveallTotal}.</p>
                                 <p> ဆ = ${details.xx}.</P>
-                                <p>လျော် = (${details.JP}) = ${total} x ${details.xx} = ${winlose}.</p> 
+                                <p>လျော် = (${details.JP}) = ${total} x ${details.xx}ဆ = -${winlose}.</p> 
                                 <p>ကော်မရှင် = ${saveallTotal} x ${commit} = ${commition}.</p>
                                 <h4 style='color:blue'>စုစုပေါင်း =  ${totalcompute}. (မြတ်)</h4>`;
        }

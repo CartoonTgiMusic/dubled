@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <title>banker</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      margin: 0 5px;
+      /* background-color: rgb(0, 255, 4); */
+    }
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar div {
+  float: left;
+  font-size: 14px;
+  color: white;
+  text-align: center;
+  padding: 2px 5px;
+  text-decoration: none;
+}
+
+i{
+  font-size: large;
+  padding: 5px 0;
+}
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropdown-content {
+  display: none;
+  right: 0;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content li {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content li:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.create-ctn{
+  padding: 10px;
+  display: grid;
+  align-items: center;
+}
+.compute-ctn{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  div{
+    padding: 10px;
+  }
+}
+.create-div,.compute-input-div{
+  display: grid;
+  align-items: center;
+  gap: 10px;
+  margin-right: 5px;
+  input,select{
+    height: 40px;
+    padding: 0 5px;
+  }
+  p{
+    margin: 5px 0;
+    text-align: center;
+  }
+}
+    .main-ctn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 5px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      background-color: #f4f4f4;
+      padding: 5px;
+      width: 100%;
+    }
+    .inputs-ctn{
+      display: grid;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      input{
+        padding: 3px 10px;
+      }
+    }
+    .price-input,.code-input{
+        height: 40px;
+      }
+    .keypart{
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .key{
+      background-color: lightgray;
+      text-align: center;
+      padding: 5px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    input{
+      font-size: 16px;
+    }
+
+.main-page-ctn{
+  width: 100%;
+}
+
+.vol-ctn{
+  width: 100%;
+}
+
+.compute-edit-btn{
+  background-color: yellow;
+}
+.saveall-btn{
+  background-color: green;
+  color: white;
+  height: 50px;
+}
+table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0px auto;
+    }
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  white-space: normal; /* Ensures text wraps (default behavior) */
+  word-wrap: break-word; /* Breaks long words if necessary */
+  overflow-wrap: break-word; /* Modern alternative to word-wrap */
+}
+th {
+  background-color: #f4f4f4;
+}
+.b-td{
+  text-align: center;
+  max-width: 50px;
+}
+.save-row{
+  background-color: #f4f4f4;
+  font-weight: 600;
+  
+}
+.savebyday-ctn{
+  width: 100%;
+}
+.savelist-ctn{
+  margin-bottom: 5px;
+}
+.saveall-header{
+  text-align: center;
+}
+.saveall-compute{
+   padding: 20px;
+   border: 1px solid black;
+   background-color: rgb(231, 231, 231);
+}
+.about{
+   display:flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+}
+.change-color{
+  color: red;
+}
+
+.inactive {
+  display: none;
+}
+  </style>
+  <body>
+    <header>
+      <div class="navbar">
+        <div onclick="home()"><i class="fa-solid fa-house"></i></div>
+          <div class="nav-date"></div>
+          <div class="nav-ampm"></div>
+        <div class="dropdown">
+          <button class="dropbtn">
+            <i class="fa-solid fa-list-ul"></i>
+          </button>
+          <div class="dropdown-content">
+            <li>စာရင်းသွင်းရန်</li>
+            <li>နိုင်/ရှုံး တွက်ရန်</li>
+            <li>ဘောင်ချာများ ကြည့်ရန်</li>
+            <li>မိန်းစာမျက်နှာ ကြည့်ရန်</li>
+            <li>စားရင်းအားလုံး ကြည့်ရန်</li>
+            <li onclick="Reset()">စားရင်းအားလုံး ဖျက်ရန်</li>
+            <li>About</li>
+          </div>
+        </div> 
+      </div>
+    </header>
+  <div class="main-ctn">
+    <table class="enter-table">
+      <thead>
+        <tr class="tr">
+            <th>Code</th>
+            <th>နှုန်း</th>
+            <th>သင့်ငွေ</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <h4 class="enter-total-text" style="padding: 10px;padding-bottom: 260px;"></h4>
+
+  <div class="create-ctn page inactive">
+    <div class="create-div">
+      <p>နေ့စွဲထည့်ရန်</p>
+      <input type="date" name="date" class="date" required>
+      <select class="ampm" required>
+        <option value="မနက်">မနက်</option>
+        <option value="ညနေ">ညနေ</option>
+      </select>
+      <input type="button" value="Enter" onclick="Create()">
+    </div>
+  </div>
+  <div class="compute-ctn page inactive">
+    <p style="padding:0 8px;">စာရင်းရှင်းတမ်း</p>
+    <div class="compute-input-div">
+      <input type="number" class="jp-input" placeholder="ပေါက်ဂဏန်း" required>
+      <input type="number" class="x-input" placeholder="ဆ" required>
+      <input type="number" class="commition-input" placeholder="ကော်မရှင်">
+      <input type="button" value="Enter" onclick="compute()" class="compute-enter-btn">
+      <input type="button" value="ပြင်ရန်" onclick="Editcompute()" class="compute-edit-btn">
+    </div>
+     <div>
+       <div class="income-text"></div>
+       <div class="comm-text"></div>
+       <div class="compute-text"></div>
+       <div class="winlose-text"></div>
+      </div>
+      <input type="button" value="သိမ်းမည်" onclick="saveByDay()" class="saveall-btn">
+  </div>
+
+  <div class="vol-ctn page inactive">
+      <table id="saveTable">
+        <thead>
+          <tr>
+            <th>VolNo.</th>
+            <th>Code</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+      </table>
+      <h4 class="vol-total-text" style="padding: 8px;"></h4>
+  </div>
+
+  <div class="main-page-ctn page inactive">
+
+  </div>
+  <div class="savebyday-ctn page inactive">
+
+  </div>
+
+  <div class="reset page inactive">
+
+  </div>
+
+  <div class="about page inactive">
+    <h1>DubleD</h1>
+         <label>Version: 1.1</label>
+         <p>Contact: padecholl@gmail.com</p>
+         <p>Copyright &copy; 2025 Developed by Padecholl.</p>
+  </div>
+
+<div class="footer">
+        <div class="inputs-ctn">
+          <input
+          type="text"
+          class="code-input"
+          id="code_input"
+          placeholder="Code..."
+          readonly
+          />
+            
+          <input
+            type="number"
+            class="price-input"
+            id="price_input"
+            placeholder="Price..."
+            readonly
+            />
+        </div>
+        <div class="keypart inactive">
+        </div>
+</div>
+
+</div>
+
+    <script>
+      const forcompute = JSON.parse(localStorage.getItem('forcompute')) || []
+      const table = JSON.parse(localStorage.getItem("table")) || [];
+      const fortable = JSON.parse(localStorage.getItem("fortable")) || [];
+      const create = JSON.parse(localStorage.getItem("create")) || [];
+      const enter = JSON.parse(localStorage.getItem("enter")) || [];
+      const save = JSON.parse(localStorage.getItem("save")) || [];
+      const totals = JSON.parse(localStorage.getItem("totals")) || [];
+
+      
+      const pages = document.querySelectorAll('.page')
+      const Lis = document.querySelectorAll('li')
+      Lis.forEach((li, index) => {
+          li.addEventListener("click", () => {
+            document.querySelector('.dropdown-content').style.display = "none"
+            document.querySelector('.enter-total-text').classList.add('inactive')
+            pages.forEach((page) => {
+              page.classList.add("inactive");
+            });
+            pages[index].classList.remove("inactive");
+            document.querySelector('.enter-table').classList.add('inactive')
+            document.querySelector('.footer').classList.add('inactive')
+          });
+      });
+
+      
+      document.querySelector('.dropbtn').addEventListener('click',()=>{
+      document.querySelector('.dropdown-content').style.display = 'block'
+    })
+document.querySelector('.vol-ctn').addEventListener('click',()=>window.location.reload())
+document.querySelector('.main-page-ctn').addEventListener('click',()=>window.location.reload())
+document.querySelector('.about').addEventListener('click',()=>window.location.reload())
+
+
+const home=()=>window.location.reload()
+const Reset=()=>{
+  if(confirm('စာရင်းအားလုံးဖျက်မလား?')){
+    localStorage.clear()
+    window.location.reload()
+  }else{
+    window.location.reload()
+
+  }
+}
+
+const Create=()=>{
+    let Date = document.querySelector('.date').value
+    let Ampm = document.querySelector('.ampm').value
+    if(Date == ''){
+      alert('နေ့စွဲထည့်ရန်')
+      return
+    }
+    let formattedDate = Date.split('-').reverse().join('/');
+    create.push({Date:formattedDate,Ampm:Ampm})
+    localStorage.setItem('create',JSON.stringify(create))
+        if (create.length > 0) {
+            create.splice(0, create.length - 1);
+        }
+    localStorage.setItem("create", JSON.stringify(create));
+    window.location.reload()
+  };
+
+  create.forEach(item=>{
+    document.querySelector('.nav-date').textContent = item.Date
+    document.querySelector('.nav-ampm').textContent = item.Ampm
+
+  })
+
+      
+      const keyboardLayout = [
+        '1','2','3','R','<',
+        '4','5','6','rp','x↑',
+        '7','8','9','P','↓x',
+        'Save','0','=','v','Enter'
+      ]
+
+      const keyboard = document.querySelector('.keypart')
+      const codeField = document.querySelector('.code-input')
+      const priceField = document.querySelector('.price-input')
+      let activeInput = codeField;
+
+keyboardLayout.forEach(key=>{
+        const keyElement = document.createElement('div')
+        keyElement.classList.add('key')
+        keyElement.innerText = key
+        keyElement.onclick = () => handleKeyPress(key)
+        keyboard.appendChild(keyElement)
+      })
+
+function handleKeyPress(key){
+        if(key === '<'){
+          if(activeInput.value.charAt(activeInput.value.length-1)=="p" ||
+          activeInput.value.charAt(activeInput.value.length-1) =="x" ||
+          activeInput.value.charAt(activeInput.value.length-1) =="↑"){
+            activeInput.value = activeInput.value.slice(0,-2)
+          }else{
+            activeInput.value = activeInput.value.slice(0,-1)
+          }
+        }else if(key ==='Enter'){
+        activeInput === codeField ? priceField.focus() : codeField.focus();
+
+         Enter()
+        }else if(key === 'Save'){
+          Save()
+        }else if(key === 'v'){
+          document.querySelector('.keypart').classList.add('inactive')
+        }else {
+          activeInput.value += key
+        }
+      }
+
+codeField.onfocus = ()=>{
+        activeInput = codeField;
+        document.querySelector('.keypart').classList.remove('inactive')
+      };
+
+priceField.onfocus=()=>{
+        activeInput = priceField
+        document.querySelector('.keypart').classList.remove('inactive')
+      };
+
+const Remove = (index) => {
+        if (confirm("ဖျက်မှာလား?")) {
+          enter.splice(index, 1);
+          localStorage.setItem("enter", JSON.stringify(enter));
+        }
+        displayEnter()
+      };
+
+function roundNumbers(string) {
+        const digits = string;
+        const combinations = [];
+
+        for (let i = 0; i < digits.length; i++) {
+          for (let j = 0; j < digits.length; j++) {
+            if (i !== j) {
+              combinations.push(digits[i] + digits[j]);
+            }
+          }
+        }
+
+        return combinations;
+      }
+
+function hasSameNumber(str) {
+        const count = {};
+
+        for (let char of str) {
+          if (count[char]) {
+            return true; // The digit has appeared before
+          }
+          count[char] = 1;
+        }
+
+        return false; // No repeated digits found
+      }
+
+function RoundAllNumbers(string) {
+        const digits = string;
+        const combinations = [];
+
+        for (let i = 0; i < digits.length; i++) {
+          for (let j = 0; j < digits.length; j++) {
+            combinations.push(digits[i] + digits[j]);
+          }
+        }
+
+        return combinations;
+      }
+
+const displayEnter = () => {
+  const h4 = document.querySelector('.enter-total-text')
+  h4.innerHTML = ''
+  let Total = enter.reduce((acc, price) => acc + +price.subtotal, 0);
+  document.querySelector('.enter-total-text').innerHTML = `စုစုပေါင်း = ${Total}`
+
+  const tableBody = document.querySelector('.enter-table tbody');
+  // Clear the table body before re-rendering
+  tableBody.innerHTML = '';
+
+  // Loop through the `enter` array and create rows
+  enter.forEach((item, index) => {
+    const row = document.createElement('tr');
+
+    // Code Cell
+    const codeCell = document.createElement('td');
+    codeCell.textContent = Array.isArray(item.code) ? item.code.join(', ') : item.code;
+    row.appendChild(codeCell);
+
+    // Price Cell
+    const priceCell = document.createElement('td');
+    priceCell.textContent = item.price;
+    row.appendChild(priceCell);
+
+    // Subtotal Cell
+    const subtotalCell = document.createElement('td');
+    subtotalCell.textContent = item.subtotal || item.enterTotal;
+    row.appendChild(subtotalCell);
+
+    // Button Cell
+    const btnCell = document.createElement('td');
+    btnCell.classList.add('b-td');
+    btnCell.innerHTML = `<button onclick='Remove(${index})'><i class="fa-solid fa-trash-can"></i></button>`;
+    row.appendChild(btnCell);
+
+    // Append the row to the table body
+    tableBody.appendChild(row);
+  });
+};
+      
+displayEnter();  
+ 
+
+const Enter =()=>{
+  if(create == ''){
+    alert('နေ့စွဲထည့်ရန်')
+    return
+  }
+        let CodeInput = document.querySelector("#code_input").value;
+        let PriceInput = document.querySelector("#price_input").value;
+        if(CodeInput == "" || PriceInput == ""){
+          return
+        }
+        
+if(CodeInput.length === 2){
+    if(CodeInput.includes('R') || CodeInput.includes('P') ||
+        CodeInput.includes('rp') || CodeInput.includes('x')  ){
+            return
+          }
+                let codes =[CodeInput]
+
+                let nums = codes.map(code => ({ [code]: PriceInput }));
+                table.push(nums)
+                localStorage.setItem('table',JSON.stringify(table))
+      let subtotal = PriceInput
+      let code = {code:CodeInput,price:PriceInput,subtotal:subtotal}
+      enter.push(code)
+      localStorage.setItem("enter", JSON.stringify(enter));
+  };
+        
+if(CodeInput.includes('=') && CodeInput.length > 4){
+          let codes = CodeInput.split("=");
+          for(let i=0; i < codes.length; i++){
+              if(codes[i].length >2 || codes[i].length < 2)
+              return
+            }
+
+                let nums = codes.map(code => ({ [code]: PriceInput }));
+                table.push(nums)
+                localStorage.setItem('table',JSON.stringify(table))
+                let subtotal = codes.length * PriceInput
+                let code = {code:codes,price:PriceInput,subtotal:subtotal}
+                enter.push(code)
+                localStorage.setItem("enter", JSON.stringify(enter));
+
+        };
+
+if(CodeInput.includes('R')){
+    let samenums = hasSameNumber(CodeInput);
+    if(samenums || CodeInput.length <3 ||
+          CodeInput.includes('=') || CodeInput.includes('P') ||
+          CodeInput.includes('rp') || CodeInput.includes('x')  
+          ){return}
+            let removeChar = CodeInput.replace('R','')
+            let allPermutations = [];
+            let numbers = [removeChar];
+            numbers.forEach((number) => {
+              allPermutations = allPermutations.concat(roundNumbers(number));
+            });
+
+
+          let nums = allPermutations.map(code => ({ [code]: PriceInput }));
+          table.push(nums)
+          localStorage.setItem('table',JSON.stringify(table));
+
+            let subtotal = allPermutations.length * PriceInput
+            let codes = {code:allPermutations,price:PriceInput,subtotal:subtotal}
+            enter.push(codes)
+            localStorage.setItem("enter", JSON.stringify(enter));
+            document.querySelector("#code_input").value = "";
+        }
+        
+if(CodeInput.includes('rp')){
+          let samenums = hasSameNumber(CodeInput);
+          if(samenums || CodeInput.length < 4 ||
+          CodeInput.includes('=') || CodeInput.includes('P') ||
+          CodeInput.includes('R') || CodeInput.includes('x')
+          ){
+            return
+          }
+              let removeChar = CodeInput.replace('rp','')
+              let allPermutations = [];
+              let numbers = [removeChar];
+              numbers.forEach((number) => {
+                allPermutations = allPermutations.concat(RoundAllNumbers(number));
+              });
+
+
+                let nums = allPermutations.map(code => ({ [code]: PriceInput }));
+                table.push(nums)
+                localStorage.setItem('table',JSON.stringify(table));
+      
+              let subtotal = allPermutations.length * PriceInput
+              let codes = {code:allPermutations,price:PriceInput,subtotal:subtotal}
+              enter.push(codes)
+              localStorage.setItem("enter", JSON.stringify(enter));
+        };
+        
+if(CodeInput.includes('P') && CodeInput.length === 1){
+          let dbcodes = ["00", "11", "22", "33", "44", "55", "66", "77", "88", "99",];
+          
+
+          let nums = dbcodes.map(code=>({[code]:PriceInput}))
+          table.push(nums)
+          localStorage.setItem('table',JSON.stringify(table))
+
+            let subtotal = dbcodes.length * PriceInput
+            let codes = {code:dbcodes,price:PriceInput,subtotal:subtotal}
+            enter.push(codes)
+          localStorage.setItem("enter", JSON.stringify(enter));
+        }
+        
+if(CodeInput.includes('↑')){
+          if(CodeInput.includes('=') || CodeInput.includes('P') ||
+          CodeInput.includes('R') || CodeInput.length !== 3 ){
+            return
+          };
+          
+
+            let removeChar = CodeInput.replace('x↑','')
+            let startValue = removeChar
+            let codes =[]
+            for (let i = 0; i < 10; i++) {
+               codes.push(startValue + i.toString()); // Convert each number to a string and add to codes
+            }
+
+
+          let nums = codes.map(code => ({ [code]: PriceInput }));
+          table.push(nums)
+          localStorage.setItem('table',JSON.stringify(table));
+
+            let subtotal = codes.length * PriceInput
+            let code = {code:codes,price:PriceInput,subtotal:subtotal}
+            enter.push(code)
+            localStorage.setItem('enter',JSON.stringify(enter))
+        }
+        
+if(CodeInput.includes('↓')){
+          if(CodeInput.includes('=') || CodeInput.includes('P') ||
+          CodeInput.includes('R') || CodeInput.length !== 3 ){
+            return
+          }
+          let removeChar = CodeInput.replace('↓x','')
+          let codes = [];
+          for (let i = 0; i < 10; i++) {
+              codes.push(i.toString() + removeChar);
+          }
+
+
+          let nums = codes.map(code => ({ [code]: PriceInput }));
+          table.push(nums)
+          localStorage.setItem('table',JSON.stringify(table));
+
+            let subtotal = codes.length * PriceInput
+            let code = {code:codes,price:PriceInput,subtotal:subtotal}
+            enter.push(code)
+          localStorage.setItem('enter',JSON.stringify(enter))
+        }
+        document.querySelector("#code_input").value = "";
+        document.querySelector("#price_input").value = "";
+        displayEnter()
+  };
+
+function displaySave() {
+      const tableBody = document.querySelector("#saveTable tbody")
+       save.forEach((entry,index) => {
+    
+          entry.forEach((item, idx) => {
+         
+          const row = document.createElement("tr");
+          // Add other cells
+          const volCell = document.createElement("td");
+          volCell.textContent = "-";
+          row.appendChild(volCell);
+
+          const codeCell = document.createElement("td");
+          codeCell.textContent = Array.isArray(item.code) ? item.code.join(", ") : item.code;
+          row.appendChild(codeCell);
+
+          const priceCell = document.createElement("td");
+          priceCell.textContent = item.price || "Total:";
+          if(priceCell.textContent.includes('Total:')){
+            row.classList.add('save-row')
+            volCell.textContent = `Vol (${index+1})`
+          }
+          row.appendChild(priceCell);
+
+          const subtotalCell = document.createElement("td");
+          subtotalCell.textContent = item.subtotal || item.enterTotal;
+          row.appendChild(subtotalCell);
+
+          tableBody.appendChild(row);
+        });
+      });
+    };
+    
+displaySave();
+
+
+const Save = () => {
+    if (enter == "") {
+      return enter;
+    }
+    let enterTotal = enter.reduce((acc, price) => acc + +price.subtotal, 0);
+        fortable.push(table)
+        localStorage.setItem("fortable", JSON.stringify(fortable));
+        localStorage.removeItem("table");
+        enter.push({enterTotal:enterTotal})
+        save.push(enter);
+        localStorage.setItem("save", JSON.stringify(save));
+
+        localStorage.removeItem("enter");
+        displayEnter();
+        window.location.reload()
+      };
+
+const comArrs = fortable.flat().flat();
+const tableTotal = comArrs.reduce((sum,obj)=>{
+   let value = parseFloat(Object.values(obj)[0])
+   return sum + value
+},0)
+
+document.querySelector(".vol-total-text").textContent = `စုစုပေါင်း = ${tableTotal}`
+
+const numbers = Array.from({ length: 100 }, (_, i) => i + 0); // [0,1, 2, 3, ..., 99]
+const keys = numbers.map(num => num < 10 ? `0${num}` : `${num}`);
+
+const data = comArrs.reduce((acc, obj) => {
+  keys.forEach(key => {
+    if (obj[key]) {
+      acc[key] = acc[key] || [];
+      acc[key].push(obj[key]);
+    }
+  });
+  return acc;
+}, {});
+
+function generateTable(data, keys) {
+  let table = '<table class="formain-table">';
+  table += '<tr><th>Code</th><th>Prices</th><th>Total</th></tr>';
+  // Iterate through all keys
+  keys.forEach(key => {
+    const values = data[key] || []; // Use an empty array if no values exist for the key
+    const total = values.reduce((sum, value) => sum + Number(value), 0); // Calculate the total
+    table += `
+              <tr class='table-tr'>
+                <td>${key}</td>
+                <td>${values.join(', ')}</td>
+                <td>${total}</td>
+              </tr>`;
+  });
+  table += '</table>';
+  return `<h4 style="padding: 8px;">Main Lists</h4>`+table +`<h4  style="padding: 8px;">စုစုပေါင်း = ${tableTotal}</h4>`;
+}
+// Insert the table into the DOM
+document.querySelector('.main-page-ctn').innerHTML = generateTable(data, keys);
+
+ const computeDisplay =()=>{
+   keys.forEach(key => {
+     const values = data[key] || []; // Use an empty array if no values exist for the key
+     const total = values.reduce((sum, value) => sum + Number(value), 0); // Calculate the total
+     forcompute.forEach(item=>{
+       if(item.JP == key ){
+         let jp = total * item.xx
+         let comcompute = tableTotal * item.comm/100
+         let winlose = tableTotal - (comcompute + jp)
+         document.querySelector('.income-text').innerHTML = `ကောက်ကြေး = ${tableTotal}`
+         document.querySelector('.comm-text').innerHTML = `ကော်မရှင် = ${comcompute} `
+            document.querySelector('.compute-text').innerHTML = `လျော် = (${key}) = ${total} x ${item.xx}ဆ = -${jp} `
+              if(winlose<0){
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (စိုက်)`
+                document.querySelector('.winlose-text').style.color = 'red'
+              }
+              if(winlose >= 0){
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (မြတ်)`
+                document.querySelector('.winlose-text').style.color = 'blue'
+              }
+              
+            }
+          })
+        }
+      );
+    }
+
+function compute(){
+        let JP = document.querySelector('.jp-input').value
+        let xx = document.querySelector('.x-input').value
+        let comm = document.querySelector('.commition-input').value
+        if(JP == ''||xx==''||comm ==''||JP.length !== 2 || xx > 100 || save == ""){
+           return
+        }
+        
+        forcompute.push({JP:JP,xx:xx,comm:comm})
+        localStorage.setItem('forcompute',JSON.stringify(forcompute))
+        document.querySelector('.jp-input').classList.add('inactive')
+        document.querySelector('.x-input').classList.add('inactive')
+        document.querySelector('.commition-input').classList.add('inactive')
+        document.querySelector('.saveall-btn').classList.remove('inactive')
+
+        document.querySelector('.compute-enter-btn').classList.add('inactive')
+        document.querySelector('.compute-edit-btn').classList.remove('inactive')
+        document.querySelector('.jp-input').value =''
+        document.querySelector('.x-input').value= ''
+        document.querySelector('.commition-input').value =''
+        computeDisplay()
+      }
+
+function Editcompute(){
+  forcompute.splice(0,forcompute.length)
+  localStorage.setItem('forcompute',JSON.stringify(forcompute))
+  document.querySelector('.compute-enter-btn').classList.remove('inactive')
+  document.querySelector('.compute-edit-btn').classList.add('inactive')
+  document.querySelector('.jp-input').classList.remove('inactive')
+  document.querySelector('.x-input').classList.remove('inactive')
+  document.querySelector('.commition-input').classList.remove('inactive')
+  document.querySelector('.saveall-btn').classList.add('inactive')
+
+  document.querySelector('.income-text').innerHTML = ''
+            document.querySelector('.comm-text').innerHTML = ''
+            document.querySelector('.compute-text').innerHTML = ''
+            document.querySelector('.winlose-text').innerHTML = ''
+}
+
+if(forcompute !== ""){
+  document.querySelector('.compute-enter-btn').classList.add('inactive')
+  document.querySelector('.compute-edit-btn').classList.remove('inactive')
+  document.querySelector('.jp-input').classList.add('inactive')
+  document.querySelector('.x-input').classList.add('inactive')
+  document.querySelector('.commition-input').classList.add('inactive')
+  document.querySelector('.saveall-btn').classList.remove('inactive')
+}
+if(forcompute == ""){
+  document.querySelector('.compute-enter-btn').classList.remove('inactive')
+  document.querySelector('.compute-edit-btn').classList.add('inactive')
+  document.querySelector('.jp-input').classList.remove('inactive')
+  document.querySelector('.x-input').classList.remove('inactive')
+  document.querySelector('.commition-input').classList.remove('inactive')
+  document.querySelector('.saveall-btn').classList.add('inactive')
+}
+ 
+computeDisplay()
+
+ const savebyday = JSON.parse(localStorage.getItem('savebyday')) || []
+ const savebydayCtn = document.querySelector('.savebyday-ctn');
+
+ const saveAllDisplay=()=>{
+  savebyday.forEach((entry) => {
+        let dateAmpm = entry[0][0];
+        let tablesData = entry[1];
+        let details = entry[2][0];
+        let container = document.createElement('div')
+        container.classList.add('savelist-ctn')
+        let headerDiv = document.createElement('h4')
+        headerDiv.classList.add('saveall-header')
+        headerDiv.textContent = `${dateAmpm.Date} - ${dateAmpm.Ampm}`;
+        container.appendChild(headerDiv);
+        
+let tableDiv = document.createElement('div')
+tableDiv.classList.add('saveall-table')
+tableDiv.classList.add('for-toggle-table')
+tableDiv.classList.add('inactive')
+let comArrs = tablesData.flat().flat();
+let saveallTotal = comArrs.reduce((sum,obj)=>{
+   let value = parseFloat(Object.values(obj)[0])
+   return sum + value
+},0)
+
+let numbers = Array.from({ length: 100 }, (_, i) => i + 0); // [0,1, 2, 3, ..., 99]
+let keys = numbers.map(num => num < 10 ? `0${num}` : `${num}`);
+
+let data = comArrs.reduce((acc, obj) => {
+  keys.forEach(key => {
+    if (obj[key]) {
+      acc[key] = acc[key] || [];
+      acc[key].push(obj[key]);
+    }
+  });
+  return acc;
+}, {});
+
+
+function generateSaveAllTable(data, keys) {
+  let table = '<table class="formain-table toggle-table">';
+  table += '<tr class="tr-btn"><th>Code</th><th>Prices</th><th>Total</th></tr>';
+  // Iterate through all keys
+  keys.forEach(key => {
+    let values = data[key] || []; // Use an empty array if no values exist for the key
+    let total = values.reduce((sum, value) => sum + Number(value), 0); // Calculate the total
+    table += `
+              <tr>
+                <td>${key}</td>
+                <td>${values.join(', ')}</td>
+                <td>${total}</td>
+              </tr>`;
+  });
+  table += '</table>';
+  return table 
+}
+// Insert the table into the DOM
+tableDiv.innerHTML = generateSaveAllTable(data, keys)
+container.appendChild(tableDiv)
+
+        let computeDiv = document.createElement('div');
+        computeDiv.classList.add('saveall-compute')
+        computeDiv.classList.add('for-toggle-compute')
+        computeDiv.classList.add('inactive')
+
+
+  keys.forEach(key => {
+     const values = data[key] || []; // Use an empty array if no values exist for the key
+     const total = values.reduce((sum, value) => sum + Number(value), 0); // Calculate the total
+     if(key == details.JP){
+       let commit = details.comm/100
+       let commition = saveallTotal * commit
+       let winlose = total * details.xx
+       let totalcompute = saveallTotal - (winlose + commition)
+       
+       if(totalcompute >= 0){
+         computeDiv.innerHTML = `<h4>${dateAmpm.Date} - ${dateAmpm.Ampm}</h4>
+                                <p>ကောက်ကြေး: ${saveallTotal}</p>
+                                <p> ဆ: ${details.xx}.</P>
+                                <p>လျော်: (${details.JP}) = ${total} x ${details.xx} = ${winlose}.</p> 
+                                <p>ကော်မရှင်: ${saveallTotal} x ${commit} = ${commition}.</p>
+                                <h4 style='color:blue'>စုစုပေါင်း =  ${totalcompute}. (မြတ်)</h4>`;
+       }
+       if(totalcompute < 0){
+        computeDiv.innerHTML = ` <h4>${dateAmpm.Date} - ${dateAmpm.Ampm}</h4>
+                                <p>ကောက်ကြေး: ${saveallTotal}</p>
+                                <p> ဆ: ${details.xx}.</P>
+                                <p>လျော်: (${details.JP}) = ${total} x ${details.xx} = ${winlose}.</p> 
+                                <p>ကော်မရှင်: ${saveallTotal} x ${commit} = ${commition}.</p>
+                                <h4 style='color:red'>စုစုပေါင်း =  ${totalcompute}. (စိုက်)</h4>`;
+       }
+
+                              }
+                  }
+      );
+
+        container.appendChild(computeDiv);
+        savebydayCtn.appendChild(container);
+    });
+ }
+
+ saveAllDisplay()
+
+ const saveByDay=()=>{
+  if(forcompute == ""){
+    return
+  }
+   savebyday.push([create,fortable,forcompute])
+   localStorage.setItem('savebyday',JSON.stringify(savebyday))
+   localStorage.removeItem('create')
+   localStorage.removeItem('fortable')
+   localStorage.removeItem('forcompute')
+   localStorage.removeItem('save')
+  console.log(savebyday)
+  window.location.reload()
+ }
+
+const forToggleHeader = document.querySelectorAll('.saveall-header')
+const forToggleTable = document.querySelectorAll('.for-toggle-table')
+const forTogglecompute = document.querySelectorAll('.for-toggle-compute')
+
+forToggleHeader.forEach((header,index)=>{
+  header.addEventListener('click',()=>{
+    forToggleHeader[index].classList.toggle('change-color')
+    forTogglecompute[index].classList.toggle('inactive')
+    forToggleTable[index].classList.toggle('inactive')
+  })
+});
+
+forTogglecompute.forEach((ctn,index)=>{
+  ctn.addEventListener('click',()=>{
+    toggleTable[index].classList.toggle('inactive')
+  })
+})
+
+const toggleTable = document.querySelectorAll('.toggle-table')
+toggleTable.forEach((btn,index)=>{
+  btn.addEventListener('click',()=>{
+    toggleTable[index].classList.toggle('inactive')
+    console.log('click')
+  })
+})
+    </script>
+  </body>
+</html>

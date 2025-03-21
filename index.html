@@ -20,7 +20,7 @@
     header{
       position: sticky;
       top: 0;
-      margin: 0 5px;
+      /* margin: 0 5px; */
       /* background-color: rgb(0, 255, 4); */
     }
 .navbar {
@@ -29,6 +29,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  i{
+  font-size: 1.5rem;
+  padding: 5px;
+}
 }
 
 .navbar div {
@@ -36,7 +40,7 @@
   font-size: 14px;
   color: white;
   text-align: center;
-  padding: 2px 5px;
+  padding: 2px 0;
   text-decoration: none;
 }
 
@@ -45,10 +49,7 @@
   place-items: center;
 }
 
-i{
-  font-size: large;
-  padding: 5px 0;
-}
+
 .dropdown {
   float: left;
   overflow: hidden;
@@ -71,7 +72,7 @@ i{
   background-color: #f9f9f9;
   min-width: 200px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  z-index: -1;
 }
 
 .dropdown-content li {
@@ -159,7 +160,9 @@ i{
     .key{
       background-color: lightgray;
       text-align: center;
+      line-height: 30px ;
       padding: 5px;
+      font-weight: 600;
     }
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -403,6 +406,7 @@ document.querySelector('.about').addEventListener('click',()=>window.location.re
 
 
 const home=()=>window.location.reload()
+
 const Reset=()=>{
   if(confirm('စာရင်းအားလုံးဖျက်မလား?')){
     localStorage.clear()
@@ -459,16 +463,9 @@ keyboardLayout.forEach(key=>{
 
 function handleKeyPress(key){
         if(key === '<'){
-          if(activeInput.value.charAt(activeInput.value.length-1)=="p" ||
-          activeInput.value.charAt(activeInput.value.length-1) =="x" ||
-          activeInput.value.charAt(activeInput.value.length-1) =="↑"){
-            activeInput.value = activeInput.value.slice(0,-2)
-          }else{
-            activeInput.value = activeInput.value.slice(0,-1)
-          }
+          sliceChar()
         }else if(key ==='Enter'){
         activeInput === codeField ? priceField.focus() : codeField.focus();
-
          Enter()
         }else if(key === 'Save'){
           Save()
@@ -478,6 +475,23 @@ function handleKeyPress(key){
           activeInput.value += key
         }
       }
+
+                // Use a regular expression to match all non-digit characters and replace them with an empty string
+          
+const sliceChar=()=>{
+    if(activeInput.value.charAt(activeInput.value.length-4)=='ိ'){
+        activeInput.value = activeInput.value.slice(0,-4)
+      }if(activeInput.value.charAt(activeInput.value.length-3)=='ိ'){
+         activeInput.value = activeInput.value.slice(0,-3)
+       }if(activeInput.value.charAt(activeInput.value.length-1)=='း'){
+          activeInput.value = activeInput.value.slice(0,-2)
+         }if(activeInput.value.charAt(activeInput.value.length-3)=='ပ'){
+         activeInput.value = activeInput.value.slice(0,-3)
+       }
+       else{
+        activeInput.value = activeInput.value.slice(0,-1)
+       } 
+  }   
 
 codeField.onfocus = ()=>{
         activeInput = codeField;

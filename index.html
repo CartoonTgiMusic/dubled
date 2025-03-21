@@ -8,7 +8,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
 
-    <title>DubleD</title>
+    <title>Owner</title>
   </head>
   <style>
     * {
@@ -21,17 +21,14 @@
       position: sticky;
       top: 0;
       margin: 0 5px;
+      /* background-color: rgb(0, 255, 4); */
     }
 .navbar {
   overflow: hidden;
-  background-color: #000000;
+  background-color: #333;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  i{
-  font-size: 20px;
-  padding: 5px 0;
-}
 }
 
 .navbar div {
@@ -39,10 +36,19 @@
   font-size: 14px;
   color: white;
   text-align: center;
-  padding:5px;
+  padding: 2px 5px;
   text-decoration: none;
 }
 
+.date-ampm{
+  display:grid;
+  place-items: center;
+}
+
+i{
+  font-size: large;
+  padding: 5px 0;
+}
 .dropdown {
   float: left;
   overflow: hidden;
@@ -120,9 +126,7 @@
       align-items: center;
       padding: 0 5px;
     }
-.remove-btn{
-  border: none;
-}
+
     .footer {
       position: fixed;
       bottom: 0;
@@ -171,7 +175,16 @@
 
 .vol-ctn{
   width: 100%;
+  div{
+    margin-bottom: 20px;
+  }
+    h4{
+      color: rgb(0, 0, 255);
+      padding: 8px;
+    }
+  
 }
+
 
 .compute-edit-btn{
   background-color: yellow;
@@ -200,6 +213,12 @@ th {
 .b-td{
   text-align: center;
   max-width: 50px;
+}
+.remove-btn{
+  border: none;
+  i{
+    font-size: 1rem;
+  }
 }
 .save-row{
   background-color: #f4f4f4;
@@ -239,8 +258,10 @@ th {
     <header>
       <div class="navbar">
         <div onclick="home()"><i class="fa-solid fa-house"></i></div>
+        <div class="date-ampm">
           <div class="nav-date"></div>
           <div class="nav-ampm"></div>
+        </div>
         <div class="dropdown">
           <button class="dropbtn">
             <i class="fa-solid fa-list-ul"></i>
@@ -263,13 +284,14 @@ th {
         <tr class="tr">
             <th>Code</th>
             <th>နှုန်း</th>
+            <th>လုံးရေ</th>
             <th>သင့်ငွေ</th>
             <th></th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-    <h4 class="enter-total-text" style="padding: 10px;padding-bottom: 260px;"></h4>
+    <h4 class="enter-total-text" style="padding: 10px;padding-bottom: 260px"></h4>
 
   <div class="create-ctn page inactive">
     <div class="create-div">
@@ -301,20 +323,7 @@ th {
   </div>
 
   <div class="vol-ctn page inactive">
-      <table id="saveTable">
-        <thead>
-          <tr>
-            <th>VolNo.</th>
-            <th>Code</th>
-            <th>Price</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Rows will be inserted here by JavaScript -->
-        </tbody>
-      </table>
-      <h4 class="vol-total-text" style="padding: 8px;"></h4>
+
   </div>
 
   <div class="main-page-ctn page inactive">
@@ -428,12 +437,12 @@ const Create=()=>{
   })
 
       
-      const keyboardLayout = [
-        '1','2','3','R','<',
-        '4','5','6','rp','x↑',
-        '7','8','9','P','↓x',
-        'Save','0','=','v','Enter'
-      ]
+  const keyboardLayout = [
+    '1', '2', '3', 'ပတ်', '<',
+    '4', '5', '6', 'တိုင်', 'ထိပ်',
+    '7', '8', '9', 'ပူး', 'ပိတ်',
+    'Save', '0', '=', 'v', 'Enter'
+  ];
 
       const keyboard = document.querySelector('.keypart')
       const codeField = document.querySelector('.code-input')
@@ -542,7 +551,6 @@ const displayEnter = () => {
   // Loop through the `enter` array and create rows
   enter.forEach((item, index) => {
     const row = document.createElement('tr');
-
     // Code Cell
     const codeCell = document.createElement('td');
     codeCell.textContent = Array.isArray(item.code) ? item.code.join(', ') : item.code;
@@ -553,6 +561,10 @@ const displayEnter = () => {
     priceCell.textContent = item.price;
     row.appendChild(priceCell);
 
+    const Qty = document.createElement('td');
+    Qty.textContent = item.qty;
+    row.appendChild(Qty);
+
     // Subtotal Cell
     const subtotalCell = document.createElement('td');
     subtotalCell.textContent = item.subtotal || item.enterTotal;
@@ -561,7 +573,7 @@ const displayEnter = () => {
     // Button Cell
     const btnCell = document.createElement('td');
     btnCell.classList.add('b-td');
-    btnCell.innerHTML = `<button class='remove-btn' onclick='Remove(${index})'><i class="fa-solid fa-trash-can"></i></button>`;
+    btnCell.innerHTML = `<button class="remove-btn"onclick='Remove(${index})'><i class="fa-solid fa-trash-can"></i></button>`;
     row.appendChild(btnCell);
 
     // Append the row to the table body
@@ -571,201 +583,287 @@ const displayEnter = () => {
       
 displayEnter();  
  
-
-const Enter =()=>{
-  if(create == ''){
-    alert('နေ့စွဲထည့်ရန်')
-    return
-  }
-        let CodeInput = document.querySelector("#code_input").value;
-        let PriceInput = document.querySelector("#price_input").value;
-        if(CodeInput == "" || PriceInput == ""){
-          return
-        }
-        
-if(CodeInput.length === 2){
-    if(CodeInput.includes('R') || CodeInput.includes('P') ||
-        CodeInput.includes('rp') || CodeInput.includes('x')  ){
+const Enter = () => {
+    if(create == ''){
+      alert('နေ့စွဲထည့်ရန်')
+      return
+    }
+          let CodeInput = document.querySelector("#code_input").value;
+          let PriceInput = document.querySelector("#price_input").value;
+          if(CodeInput === "" || PriceInput === ""){
             return
           }
-                let codes =[CodeInput]
+          // Use a regular expression to match all non-digit characters and replace them with an empty string
+          const numbersOnly = CodeInput.replace(/\D/g, '');
+          const nonNumbersOnly = CodeInput.replace(/\d/g, '');
 
-                let nums = codes.map(code => ({ [code]: PriceInput }));
-                table.push(nums)
-                localStorage.setItem('table',JSON.stringify(table))
-      let subtotal = PriceInput
-      let code = {code:CodeInput,price:PriceInput,subtotal:subtotal}
-      enter.push(code)
-      localStorage.setItem("enter", JSON.stringify(enter));
-  };
-        
-if(CodeInput.includes('=') && CodeInput.length > 4){
-          let codes = CodeInput.split("=");
-          for(let i=0; i < codes.length; i++){
-              if(codes[i].length >2 || codes[i].length < 2)
-              return
+    if(numbersOnly.length != 2 && nonNumbersOnly == "" ){
+      return
+    }
+
+    if(CodeInput.includes('တိုင်')){
+      if(CodeInput.length > 6 || CodeInput.length < 6){
+        return
+      }
+      // Generate the array
+      const result = Array.from({ length: 20 }, (_, index) => {
+        if (index < 10) {
+          return `${numbersOnly}${index}`; // Add leading zero for numbers 0-9 (e.g., '00', '01', ..., '09')
+        } else {
+          return `${(index - 10)}${numbersOnly}`; // Generate numbers 10, 20, ..., 90
+        }
+      });
+      let numbers = [...new Set(result)]
+      let nums = numbers.map(code => ({ [code]: PriceInput }));
+        table.push(nums)
+        localStorage.setItem('table',JSON.stringify(table));
+
+        let qty = numbers.length
+        let subtotal = qty * PriceInput
+        let codes = {code:CodeInput,qty:qty,price:PriceInput,subtotal:subtotal}
+        enter.push(codes)
+        localStorage.setItem("enter", JSON.stringify(enter));
+        document.querySelector("#code_input").value = "";
+        document.querySelector("#price_input").value = "";
+            }
+    
+    if(CodeInput.includes('ပတ်ပူး') && nonNumbersOnly.length == 6){
+      let samenums = hasSameNumber(numbersOnly);
+       if(samenums || numbersOnly.length < 2 || nonNumbersOnly.length >6
+       ){
+        return
+       }
+        let allPermutations = [];
+        let numbers = [numbersOnly];
+        numbers.forEach((number) => {
+            allPermutations = allPermutations.concat(RoundAllNumbers(number));
+        });
+
+            let nums = allPermutations.map(code => ({ [code]: PriceInput }));
+            table.push(nums)
+            localStorage.setItem('table',JSON.stringify(table));
+
+            const numericPart = CodeInput.replace(/\D+/g, ''); // Remove all non-digits
+            const textPart = CodeInput.replace(/\d+/g, ''); // Remove all digits
+            const codeText = numericPart + textPart;
+        let qty = allPermutations.length
+        let subtotal = qty * PriceInput
+        let codes = {code:codeText,qty:qty,price:PriceInput,subtotal:subtotal}
+        enter.push(codes)
+        localStorage.setItem("enter", JSON.stringify(enter));
+        document.querySelector("#code_input").value = "";
+        document.querySelector("#price_input").value = "";
+    };
+
+  if(CodeInput >= 0 || CodeInput <=99){
+                  let codes =[CodeInput]
+                  let nums = codes.map(code => ({ [code]: PriceInput }));
+                  table.push(nums)
+                  localStorage.setItem('table',JSON.stringify(table))
+        let qty = '1'
+        let code = {code:CodeInput,qty:qty,price:PriceInput,subtotal:PriceInput}
+        enter.push(code)
+        localStorage.setItem("enter", JSON.stringify(enter));
+        document.querySelector("#code_input").value = "";
+        document.querySelector("#price_input").value = "";
+    };
+          
+  if(CodeInput.includes('=')){
+            let codes = CodeInput.split("=");
+            for(let i=0; i < codes.length; i++){
+                if(codes[i].length !== 2){
+                return
+                }
+              }
+              let nums = codes.map(code => ({ [code]: PriceInput }));
+              table.push(nums)
+              localStorage.setItem('table',JSON.stringify(table))
+              let qty = codes.length
+              let subtotal = qty * PriceInput
+              let code = {code:codes,qty:qty,price:PriceInput,subtotal:subtotal}
+              enter.push(code)
+              localStorage.setItem("enter", JSON.stringify(enter));
+              document.querySelector("#code_input").value = "";
+              document.querySelector("#price_input").value = "";
+          };
+  
+  if(CodeInput.includes('ပတ်') && nonNumbersOnly.length === 3){
+      let samenums = hasSameNumber(numbersOnly);
+      if(samenums || numbersOnly.length < 2)
+           {
+                return
             }
 
-                let nums = codes.map(code => ({ [code]: PriceInput }));
-                table.push(nums)
-                localStorage.setItem('table',JSON.stringify(table))
-                let subtotal = codes.length * PriceInput
-                let code = {code:codes,price:PriceInput,subtotal:subtotal}
-                enter.push(code)
-                localStorage.setItem("enter", JSON.stringify(enter));
-
-        };
-
-if(CodeInput.includes('R')){
-    let samenums = hasSameNumber(CodeInput);
-    if(samenums || CodeInput.length <3 ||
-          CodeInput.includes('=') || CodeInput.includes('P') ||
-          CodeInput.includes('rp') || CodeInput.includes('x')  
-          ){return}
-            let removeChar = CodeInput.replace('R','')
-            let allPermutations = [];
-            let numbers = [removeChar];
-            numbers.forEach((number) => {
-              allPermutations = allPermutations.concat(roundNumbers(number));
-            });
-
-
-          let nums = allPermutations.map(code => ({ [code]: PriceInput }));
-          table.push(nums)
-          localStorage.setItem('table',JSON.stringify(table));
-
-            let subtotal = allPermutations.length * PriceInput
-            let codes = {code:allPermutations,price:PriceInput,subtotal:subtotal}
-            enter.push(codes)
-            localStorage.setItem("enter", JSON.stringify(enter));
-            document.querySelector("#code_input").value = "";
-        }
-        
-if(CodeInput.includes('rp')){
-          let samenums = hasSameNumber(CodeInput);
-          if(samenums || CodeInput.length < 4 ||
-          CodeInput.includes('=') || CodeInput.includes('P') ||
-          CodeInput.includes('R') || CodeInput.includes('x')
-          ){
-            return
-          }
-              let removeChar = CodeInput.replace('rp','')
+              let removeChar = CodeInput.replace('ပတ်','')
               let allPermutations = [];
               let numbers = [removeChar];
               numbers.forEach((number) => {
-                allPermutations = allPermutations.concat(RoundAllNumbers(number));
+                allPermutations = allPermutations.concat(roundNumbers(number));
               });
+  
+  
+            let nums = allPermutations.map(code => ({ [code]: PriceInput }));
+            table.push(nums)
+            localStorage.setItem('table',JSON.stringify(table));
 
-
-                let nums = allPermutations.map(code => ({ [code]: PriceInput }));
-                table.push(nums)
-                localStorage.setItem('table',JSON.stringify(table));
-      
-              let subtotal = allPermutations.length * PriceInput
-              let codes = {code:allPermutations,price:PriceInput,subtotal:subtotal}
+            const numericPart = CodeInput.replace(/\D+/g, ''); // Remove all non-digits
+            const textPart = CodeInput.replace(/\d+/g, ''); // Remove all digits
+            const codeText = numericPart + textPart;
+              
+              let qty = allPermutations.length
+              let subtotal = qty * PriceInput
+              let codes = {code:codeText,qty:qty,price:PriceInput,subtotal:subtotal}
               enter.push(codes)
               localStorage.setItem("enter", JSON.stringify(enter));
-        };
-        
-if(CodeInput.includes('P') && CodeInput.length === 1){
-          let dbcodes = ["00", "11", "22", "33", "44", "55", "66", "77", "88", "99",];
+              document.querySelector("#code_input").value = "";
+              document.querySelector("#price_input").value = "";
+          }
+
+  if(CodeInput.includes('ပူး') && nonNumbersOnly.length === 3){
+    if(CodeInput.length > 3){
+      return
+    }
+            let dbcodes = ["00", "11", "22", "33", "44", "55", "66", "77", "88", "99",];
+            let nums = dbcodes.map(code=>({[code]:PriceInput}))
+            table.push(nums)
+            localStorage.setItem('table',JSON.stringify(table))
+
+            const numericPart = CodeInput.replace(/\D+/g, ''); // Remove all non-digits
+            const textPart = CodeInput.replace(/\d+/g, ''); // Remove all digits
+            const codeText = numericPart + textPart;
+              let qty = dbcodes.length
+              let subtotal = qty * PriceInput
+              let codes = {code:codeText,qty:qty,price:PriceInput,subtotal:subtotal}
+              enter.push(codes)
+            localStorage.setItem("enter", JSON.stringify(enter));
+            document.querySelector("#code_input").value = "";
+            document.querySelector("#price_input").value = "";
+          }
           
+  if(CodeInput.includes('ထိပ်') && nonNumbersOnly.length === 4){
+   
+            if(CodeInput.length > 5){
+              return
+            };
 
-          let nums = dbcodes.map(code=>({[code]:PriceInput}))
-          table.push(nums)
-          localStorage.setItem('table',JSON.stringify(table))
+              let removeChar = CodeInput.replace('ထိပ်','')
+              let startValue = removeChar
+              let codes =[]
+              for (let i = 0; i < 10; i++) {
+                 codes.push(startValue + i.toString()); // Convert each number to a string and add to codes
+              }
+  
+  
+            let nums = codes.map(code => ({ [code]: PriceInput }));
+            table.push(nums)
+            localStorage.setItem('table',JSON.stringify(table));
 
-            let subtotal = dbcodes.length * PriceInput
-            let codes = {code:dbcodes,price:PriceInput,subtotal:subtotal}
-            enter.push(codes)
-          localStorage.setItem("enter", JSON.stringify(enter));
-        }
-        
-if(CodeInput.includes('↑')){
-          if(CodeInput.includes('=') || CodeInput.includes('P') ||
-          CodeInput.includes('R') || CodeInput.length !== 3 ){
-            return
-          };
+            const numericPart = CodeInput.replace(/\D+/g, ''); // Remove all non-digits
+            const textPart = CodeInput.replace(/\d+/g, ''); // Remove all digits
+            const codeText = numericPart + textPart;
+              let qty = codes.length 
+              let subtotal = qty * PriceInput
+              let code = {code:codeText,qty:qty,price:PriceInput,subtotal:subtotal}
+              enter.push(code)
+              localStorage.setItem('enter',JSON.stringify(enter))
+              document.querySelector("#code_input").value = "";
+              document.querySelector("#price_input").value = "";
+          }
           
+  if(CodeInput.includes('ပိတ်') && nonNumbersOnly.length === 4){
+            if(CodeInput.length > 5){
 
-            let removeChar = CodeInput.replace('x↑','')
-            let startValue = removeChar
-            let codes =[]
-            for (let i = 0; i < 10; i++) {
-               codes.push(startValue + i.toString()); // Convert each number to a string and add to codes
+              return
             }
 
+            let removeChar = CodeInput.replace('ပိတ်','')
+            let codes = [];
+            for (let i = 0; i < 10; i++) {
+                codes.push(i.toString() + removeChar);
+            }
+  
+  
+            let nums = codes.map(code => ({ [code]: PriceInput }));
+            table.push(nums)
+            localStorage.setItem('table',JSON.stringify(table));
 
-          let nums = codes.map(code => ({ [code]: PriceInput }));
-          table.push(nums)
-          localStorage.setItem('table',JSON.stringify(table));
-
-            let subtotal = codes.length * PriceInput
-            let code = {code:codes,price:PriceInput,subtotal:subtotal}
-            enter.push(code)
+            const numericPart = CodeInput.replace(/\D+/g, ''); // Remove all non-digits
+            const textPart = CodeInput.replace(/\d+/g, ''); // Remove all digits
+            const codeText = numericPart + textPart;
+              let qty = codes.length   
+              let subtotal = qty * PriceInput
+              let code = {code:codeText,qty:qty,price:PriceInput,subtotal:subtotal}
+              enter.push(code)
             localStorage.setItem('enter',JSON.stringify(enter))
-        }
-        
-if(CodeInput.includes('↓')){
-          if(CodeInput.includes('=') || CodeInput.includes('P') ||
-          CodeInput.includes('R') || CodeInput.length !== 3 ){
-            return
+            document.querySelector("#code_input").value = "";
+            document.querySelector("#price_input").value = "";
           }
-          let removeChar = CodeInput.replace('↓x','')
-          let codes = [];
-          for (let i = 0; i < 10; i++) {
-              codes.push(i.toString() + removeChar);
-          }
-
-
-          let nums = codes.map(code => ({ [code]: PriceInput }));
-          table.push(nums)
-          localStorage.setItem('table',JSON.stringify(table));
-
-            let subtotal = codes.length * PriceInput
-            let code = {code:codes,price:PriceInput,subtotal:subtotal}
-            enter.push(code)
-          localStorage.setItem('enter',JSON.stringify(enter))
-        }
-        document.querySelector("#code_input").value = "";
-        document.querySelector("#price_input").value = "";
-        displayEnter()
+     displayEnter()
   };
 
 function displaySave() {
-      const tableBody = document.querySelector("#saveTable tbody")
-       save.forEach((entry,index) => {
-    
-          entry.forEach((item, idx) => {
-         
-          const row = document.createElement("tr");
-          // Add other cells
-          const volCell = document.createElement("td");
-          volCell.textContent = "-";
-          row.appendChild(volCell);
+    const volCtn = document.querySelector(".vol-ctn");
+    let html = '';
 
-          const codeCell = document.createElement("td");
-          codeCell.textContent = Array.isArray(item.code) ? item.code.join(", ") : item.code;
-          row.appendChild(codeCell);
+    // Clear the container before appending new content
+    volCtn.innerHTML = '';
 
-          const priceCell = document.createElement("td");
-          priceCell.textContent = item.price || "Total:";
-          if(priceCell.textContent.includes('Total:')){
-            row.classList.add('save-row')
-            volCell.textContent = `Vol (${index+1})`
-          }
-          row.appendChild(priceCell);
+    save.forEach((entry, index) => {
+        // Create a new table for each entry
+        html += `<div calss='vol-div'>
+           <h4>Vol-No.(${index + 1})</h4>
+            <table id="saveTable-${index}">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-          const subtotalCell = document.createElement("td");
-          subtotalCell.textContent = item.subtotal || item.enterTotal;
-          row.appendChild(subtotalCell);
+                </tbody>
+            </table>
+        </div>`;
+    });
 
-          tableBody.appendChild(row);
+    // Append the generated HTML to the container
+    volCtn.innerHTML = html + `<h4 class="vol-total-text" style="padding: 8px;">စုစုပေါင်း = ${tableTotal}</h4>`;
+
+    // Now, populate each table with rows
+    save.forEach((entry, index) => {
+        const tableBody = document.querySelector(`#saveTable-${index} tbody`);
+
+        entry.forEach((item, idx) => {
+            const row = document.createElement("tr");
+
+            const codeCell = document.createElement("td");
+            codeCell.textContent = Array.isArray(item.code) ? item.code.join(", ") : item.code;
+            row.appendChild(codeCell);
+
+            const priceCell = document.createElement("td");
+            priceCell.textContent = item.price;
+            if (priceCell.textContent.includes('Total:')) {
+                row.classList.add('save-row');
+            }
+            row.appendChild(priceCell);
+
+            const Qty = document.createElement("td");
+            Qty.textContent = item.qty || "Total:";
+            if (Qty.textContent.includes('Total:')) {
+                row.classList.add('save-row');
+            }
+            row.appendChild(Qty);
+
+            const subtotalCell = document.createElement("td");
+            subtotalCell.textContent = item.subtotal || item.enterTotal;
+            row.appendChild(subtotalCell);
+
+            tableBody.appendChild(row);
         });
-      });
-    };
-    
-displaySave();
+    });
+  }
 
 const Save = () => {
     if (enter == "") {
@@ -790,7 +888,7 @@ const tableTotal = comArrs.reduce((sum,obj)=>{
    return sum + value
 },0)
 
-document.querySelector(".vol-total-text").textContent = `စုစုပေါင်း = ${tableTotal}`
+displaySave();
 
 const numbers = Array.from({ length: 100 }, (_, i) => i + 0); // [0,1, 2, 3, ..., 99]
 const keys = numbers.map(num => num < 10 ? `0${num}` : `${num}`);
@@ -834,15 +932,15 @@ document.querySelector('.main-page-ctn').innerHTML = generateTable(data, keys);
          let jp = total * item.xx
          let comcompute = tableTotal * item.comm/100
          let winlose = tableTotal - (comcompute + jp)
-         document.querySelector('.income-text').innerHTML = `ကောက်ကြေး = ${tableTotal}.`
-         document.querySelector('.comm-text').innerHTML = `ကော်မရှင် = ${comcompute}. `
-            document.querySelector('.compute-text').innerHTML = `လျော် = (${key}) = ${total} x ${item.xx}ဆ = -${jp}. `
+         document.querySelector('.income-text').innerHTML = `ကောက်ကြေး = ${tableTotal}`
+         document.querySelector('.comm-text').innerHTML = `ကော်မရှင် = ${comcompute} `
+            document.querySelector('.compute-text').innerHTML = `လျော် = (${key}) = ${total} x ${item.xx}ဆ = -${jp} `
               if(winlose<0){
-                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose}. (စိုက်)`
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (စိုက်)`
                 document.querySelector('.winlose-text').style.color = 'red'
               }
               if(winlose >= 0){
-                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose}. (မြတ်)`
+                document.querySelector('.winlose-text').innerHTML = `စုစုပေါင်း = ${winlose} (မြတ်)`
                 document.querySelector('.winlose-text').style.color = 'blue'
               }
               
@@ -987,10 +1085,10 @@ container.appendChild(tableDiv)
        
        if(totalcompute >= 0){
          computeDiv.innerHTML = `<h4>${dateAmpm.Date} - ${dateAmpm.Ampm}</h4>
-                                <p>ကောက်ကြေး = ${saveallTotal}.</p>
-                                <p> ဆ = ${details.xx}.</P>
-                                <p>လျော် = (${details.JP}) = ${total} x ${details.xx}ဆ = -${winlose}.</p> 
-                                <p>ကော်မရှင် = ${saveallTotal} x ${commit} = ${commition}.</p>
+                                <p>ကောက်ကြေး: ${saveallTotal}</p>
+                                <p> ဆ: ${details.xx}.</P>
+                                <p>လျော်: (${details.JP}) = ${total} x ${details.xx} = ${winlose}.</p> 
+                                <p>ကော်မရှင်: ${saveallTotal} x ${commit} = ${commition}.</p>
                                 <h4 style='color:blue'>စုစုပေါင်း =  ${totalcompute}. (မြတ်)</h4>`;
        }
        if(totalcompute < 0){
